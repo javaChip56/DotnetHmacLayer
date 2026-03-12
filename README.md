@@ -33,6 +33,27 @@ Both APIs can reference the same solution, but use different packages:
 - API A references `HmacAuth.HttpClient` and `HmacAuth.Core`
 - API B references `HmacAuth.AspNetCore` and `HmacAuth.Core`
 
+## Flow
+
+```mermaid
+sequenceDiagram
+    participant Caller as API A / Caller
+    participant ClientLib as HmacAuth.HttpClient
+    participant Host as API B / Host
+    participant ServerLib as HmacAuth.AspNetCore
+    participant Store as Credential + Nonce Stores
+
+    Caller->>ClientLib: Build outbound request
+    ClientLib->>ClientLib: Hash body + build canonical request
+    ClientLib->>ClientLib: Sign with client secret
+    ClientLib->>Host: Send request with HMAC headers
+    Host->>ServerLib: Authenticate inbound request
+    ServerLib->>Store: Resolve client secret and validate nonce
+    ServerLib->>ServerLib: Recompute body hash + signature
+    ServerLib-->>Host: Success or Unauthorized
+    Host-->>Caller: Protected API response
+```
+
 ## Samples
 
 Two runnable sample apps are included:
