@@ -226,5 +226,6 @@ GitHub Actions workflows are included for:
 - CI on every pushed commit, pull requests, and manual runs
 - packaging the library projects as NuGet artifacts
 - creating a GitHub release and publishing packages to NuGet.org on tags like `v1.0.0`
+- manual release runs with an explicit version and optional NuGet publish
 
-The publish workflow expects a repository secret named `NUGET_API_KEY`.
+The release workflow expects a repository secret named `NUGET_API_KEY`.
