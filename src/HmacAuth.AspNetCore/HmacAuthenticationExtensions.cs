@@ -1,5 +1,6 @@
 using HmacAuth.Core;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -25,6 +26,29 @@ public static class HmacAuthenticationExtensions
         return builder.AddScheme<HmacAuthenticationOptions, HmacAuthenticationHandler>(
             authenticationScheme,
             configure ?? (_ => { }));
+    }
+
+    public static AuthenticationBuilder AddHmac(
+        this AuthenticationBuilder builder,
+        IConfiguration configuration)
+    {
+        return builder.AddHmac(HmacAuthenticationDefaults.AuthenticationScheme, configuration);
+    }
+
+    public static AuthenticationBuilder AddHmac(
+        this AuthenticationBuilder builder,
+        string authenticationScheme,
+        IConfiguration configuration)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(authenticationScheme);
+
+        builder.Services.Configure<HmacAuthenticationOptions>(authenticationScheme, configuration);
+
+        return builder.AddScheme<HmacAuthenticationOptions, HmacAuthenticationHandler>(
+            authenticationScheme,
+            _ => { });
     }
 
     public static IServiceCollection AddInMemoryHmacCredentialStore(

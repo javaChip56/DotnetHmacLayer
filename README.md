@@ -31,6 +31,24 @@ Both APIs can reference the same solution, but use different packages:
 
 ## API B: verify incoming HMAC requests
 
+`appsettings.json`:
+
+```json
+{
+  "HmacAuthentication": {
+    "AllowedClockSkew": "00:05:00",
+    "RequireNonceValidation": true
+  }
+}
+```
+
+Settings:
+
+- `AllowedClockSkew`: the maximum allowed difference between the request timestamp and the API server clock. Use standard `TimeSpan` format such as `00:05:00` for 5 minutes.
+- `RequireNonceValidation`: enables replay protection by rejecting reused nonces. Leave this enabled unless you have another replay-prevention mechanism in place.
+
+`Program.cs`:
+
 ```csharp
 using HmacAuth.AspNetCore;
 using HmacAuth.Core;
@@ -43,10 +61,7 @@ builder.Services.AddInMemoryHmacCredentialStore(
 builder.Services.AddInMemoryHmacNonceStore();
 
 builder.Services.AddAuthentication(HmacAuthenticationDefaults.AuthenticationScheme)
-    .AddHmac(options =>
-    {
-        options.AllowedClockSkew = TimeSpan.FromMinutes(5);
-    });
+    .AddHmac(builder.Configuration.GetSection("HmacAuthentication"));
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -70,6 +85,8 @@ What this does:
 - validates the request timestamp window
 - validates the body hash
 - authenticates the request with scheme `HMAC`
+
+If you prefer code-based registration, `AddHmac(options => { ... })` still works.
 
 ## API A: sign outbound requests
 
