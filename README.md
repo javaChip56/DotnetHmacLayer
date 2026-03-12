@@ -14,6 +14,10 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE).
   ASP.NET Core authentication handler for verifying inbound HMAC requests.
 - `src/HmacAuth.HttpClient`
   `DelegatingHandler` for signing outbound `HttpClient` requests.
+- `samples/HmacAuth.SampleHost`
+  Runnable sample API that verifies signed requests.
+- `samples/HmacAuth.SampleCaller`
+  Runnable sample API that signs outbound requests to the sample host.
 - `tests/HmacAuth.Tests`
   End-to-end tests covering success, replay rejection, and expired timestamps.
 
@@ -28,6 +32,33 @@ Both APIs can reference the same solution, but use different packages:
 
 - API A references `HmacAuth.HttpClient` and `HmacAuth.Core`
 - API B references `HmacAuth.AspNetCore` and `HmacAuth.Core`
+
+## Samples
+
+Two runnable sample apps are included:
+
+- `samples/HmacAuth.SampleHost`: secured API listening on `http://localhost:5081`
+- `samples/HmacAuth.SampleCaller`: caller API listening on `http://localhost:5082`
+
+Run them in separate terminals:
+
+```bash
+dotnet run --project samples/HmacAuth.SampleHost --launch-profile http
+dotnet run --project samples/HmacAuth.SampleCaller --launch-profile http
+```
+
+Then exercise the flow:
+
+```bash
+curl http://localhost:5081/public/ping
+curl http://localhost:5082/call/whoami
+curl -X POST http://localhost:5082/call/echo -H "Content-Type: application/json" -d "{\"message\":\"hello\"}"
+```
+
+The sample apps share these dev-only credentials through their `appsettings.json` files:
+
+- client id: `sample-caller`
+- secret: `dev-only-secret`
 
 ## API B: verify incoming HMAC requests
 
@@ -171,8 +202,8 @@ That means the client and server must agree on:
 
 GitHub Actions workflows are included for:
 
-- CI on pushes to `master`, pull requests, and manual runs
+- CI on every pushed commit, pull requests, and manual runs
 - packaging the library projects as NuGet artifacts
-- publishing packages to NuGet.org on tags like `v1.0.0` or via manual dispatch
+- creating a GitHub release and publishing packages to NuGet.org on tags like `v1.0.0`
 
 The publish workflow expects a repository secret named `NUGET_API_KEY`.

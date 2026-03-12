@@ -4,15 +4,9 @@ on:
   push:
     tags:
       - "v*"
-  workflow_dispatch:
-    inputs:
-      version:
-        description: NuGet package version to publish
-        required: true
-        type: string
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: publish-${{ github.ref }}
@@ -39,11 +33,7 @@ jobs:
         id: version
         shell: bash
         run: |
-          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
-            VERSION="${GITHUB_REF_NAME#v}"
-          else
-            VERSION="${{ inputs.version }}"
-          fi
+          VERSION="${GITHUB_REF_NAME#v}"
 
           if [ -z "$VERSION" ]; then
             echo "Package version could not be determined." >&2
@@ -71,6 +61,16 @@ jobs:
           path: artifacts/packages/*
           if-no-files-found: error
           retention-days: 30
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            artifacts/packages/*.nupkg
+            artifacts/packages/*.snupkg
 
       - name: Publish packages to NuGet.org
         shell: bash

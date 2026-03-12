@@ -36,17 +36,10 @@ jobs:
         run: dotnet build HmacAuth.sln --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test HmacAuth.sln --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test HmacAuth.sln --configuration Release --no-build
 
       - name: Pack
         run: dotnet pack HmacAuth.sln --configuration Release --no-build --output ${{ github.workspace }}/artifacts/packages
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: tests/**/TestResults/**/*.trx
-          if-no-files-found: error
 
       - name: Upload packages
         uses: actions/upload-artifact@v4
