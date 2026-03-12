@@ -1,0 +1,38 @@
+name: sast
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+concurrency:
+  group: sast-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: csharp
+          build-mode: none
+          queries: security-extended,security-and-quality
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@v4

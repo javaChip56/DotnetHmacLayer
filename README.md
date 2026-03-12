@@ -224,6 +224,7 @@ That means the client and server must agree on:
 GitHub Actions workflows are included for:
 
 - CI on every pushed commit, pull requests, and manual runs
+- SAST scanning with GitHub CodeQL on pushes, pull requests, manual runs, and a weekly schedule
 - packaging the library projects as NuGet artifacts
 - creating a GitHub release and publishing packages to NuGet.org on tags like `v1.0.0`
 - manual release runs with an explicit version and optional NuGet publish
