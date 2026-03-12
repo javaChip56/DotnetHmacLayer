@@ -1,0 +1,22 @@
+<Project>
+  <PropertyGroup Condition="'$(IsTestProject)' != 'true'">
+    <Authors>javaChip56</Authors>
+    <Version Condition="'$(Version)' == ''">0.1.0</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/javaChip56/DotnetHmacLayer</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/javaChip56/DotnetHmacLayer</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>hmac;authentication;aspnetcore;httpclient;dotnet;webapi</PackageTags>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Deterministic>true</Deterministic>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' != 'true'">
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" Link="README.md" />
+  </ItemGroup>
+</Project>

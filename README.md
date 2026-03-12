@@ -2,6 +2,10 @@
 
 Reusable `.NET 8` HMAC authentication components for service-to-service APIs.
 
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
+
 ## Projects
 
 - `src/HmacAuth.Core`
@@ -145,3 +149,13 @@ That means the client and server must agree on:
 - The default replay window is 5 minutes.
 - Nonce validation is enabled by default.
 - Body hashing requires reading the request body; the ASP.NET Core handler buffers the stream and resets it before your endpoint runs.
+
+## CI/CD
+
+GitHub Actions workflows are included for:
+
+- CI on pushes to `master`, pull requests, and manual runs
+- packaging the library projects as NuGet artifacts
+- publishing packages to NuGet.org on tags like `v1.0.0` or via manual dispatch
+
+The publish workflow expects a repository secret named `NUGET_API_KEY`.

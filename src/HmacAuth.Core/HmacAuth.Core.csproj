@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>Shared HMAC canonicalization, content hashing, and signature primitives for .NET service-to-service authentication.</Description>
   </PropertyGroup>
 
 </Project>

@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>ASP.NET Core HMAC authentication handler for verifying signed service-to-service requests.</Description>
   </PropertyGroup>
 
   <ItemGroup>
